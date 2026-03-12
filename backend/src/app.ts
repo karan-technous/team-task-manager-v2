@@ -6,10 +6,10 @@ import projectRoute from "./routes/project.route";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: ["http://localhost:4200", "http://localhost:4200/"] }));
 app.use(express.json());
 app.use("/api/v1/users", userRoute);
-app.use("/api/v1/project",projectRoute)
+app.use("/api/v1/project", projectRoute);
 app.use(errorHandler);
 
 export default app;

@@ -17,6 +17,7 @@ interface EmmitData {
 
 @Component({
   selector: 'app-activity-panel',
+  standalone: true,
   imports: [MatIconModule],
   templateUrl: './activity-panel.html',
   styleUrl: './activity-panel.scss',

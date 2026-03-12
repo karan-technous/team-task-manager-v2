@@ -2,6 +2,8 @@
   [attr.type]="type()"
   [class.secondary]="variant() === 'secondary'"
   [class.full-width]="fullWidth()"
+  [disabled]="disabled()"
+  [attr.aria-disabled]="disabled() ? 'true' : null"
   (click)="onClick()"
 >
   @if (icon()) {

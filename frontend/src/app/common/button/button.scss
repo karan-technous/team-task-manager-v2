@@ -31,3 +31,9 @@ button.secondary {
 button.full-width {
   width: 100%;
 }
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}

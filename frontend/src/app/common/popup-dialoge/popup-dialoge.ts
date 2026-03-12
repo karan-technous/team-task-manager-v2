@@ -5,6 +5,7 @@ const ANIMATION_TIME = 250;
 
 @Component({
   selector: 'app-popup-dialoge',
+  standalone: true,
   imports: [IconButton],
   templateUrl: './popup-dialoge.html',
   styleUrl: './popup-dialoge.scss',

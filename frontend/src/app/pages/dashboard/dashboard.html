@@ -83,19 +83,37 @@
         [label]="'New Projects'"
         [fullWidth]="true"
         [icon]="'add'"
-        (click)="open = true"
+        (buttonClick)="open.set(true)"
       />
     </div>
 
-    <app-popup-dialoge [open]="open" (close)="open = false">
+    <app-popup-dialoge [open]="open()" (close)="open.set(false)">
       <h2>Add Project</h2>
       <p>This is custom UI inside the dialog.</p>
       <div class="add-project">
-        <app-form-field [label]="'Enter Project Name'" [type]="'text'" />
-        <app-form-field [label]="'Descriptions'" [type]="'text'" />
+        <app-form-field
+          [label]="'Enter Project Name'"
+          [type]="'text'"
+          [placeholder]="'e.g. Q2 Marketing Launch'"
+          [value]="projectName()"
+          (valueChange)="projectName.set($event)"
+        />
+        <app-form-field
+          [label]="'Descriptions'"
+          [type]="'textarea'"
+          [placeholder]="'Short summary of the project goals'"
+          [value]="projectDescription()"
+          (valueChange)="projectDescription.set($event)"
+        />
       </div>
       <br />
-      <app-button [label]="'Save'" [type]="'button'" [icon]="'save'" (buttonClick)="saveProject()"/>
+      <app-button
+        [label]="isSaving() ? 'Saving...' : 'Save'"
+        [type]="'button'"
+        [icon]="'save'"
+        [disabled]="!isProjectValid() || isSaving()"
+        (buttonClick)="saveProject()"
+      />
     </app-popup-dialoge>
   </section>
 

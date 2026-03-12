@@ -3,6 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-icon-input',
+  standalone: true,
   imports: [MatIconModule],
   templateUrl: './icon-input.html',
   styleUrl: './icon-input.scss',
