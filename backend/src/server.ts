@@ -1,0 +1,15 @@
+import app from "./app";
+import { AppDataSource } from "./config/database";
+import { env } from "./config/env";
+
+AppDataSource.initialize()
+  .then(() => {
+    console.log("Database connected");
+
+    app.listen(env.PORT, () => {
+      console.log(`Server running on port ${env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("DB connection error:", err);
+  });
