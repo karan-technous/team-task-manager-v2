@@ -1,0 +1,14 @@
+<div
+  [class]="positionClass()"
+  (mouseenter)="hovered.set(true)"
+  (mouseleave)="hovered.set(false)"
+>
+  @for (toast of visibleToasts(); track toast.id; let i = $index) {
+    <app-toast
+      [toast]="toast"
+      [index]="i"
+      [layout]="layout()"
+      (close)="toastService.remove(toast.id)"
+    />
+  }
+</div>

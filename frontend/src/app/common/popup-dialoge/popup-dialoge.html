@@ -1,0 +1,15 @@
+@if (open() || closing()) {
+  <div class="overlay" [class.closing]="closing()" (click)="backdropClick($event)">
+    <section class="dialog" [class.closing]="closing()">
+      <div class="close-dialog">
+        <app-icon-button
+          [variant]="'secondary'"
+          [icon]="'close'"
+          (buttonClick)="closeDialog()"
+          [active]="true"
+        />
+      </div>
+      <ng-content></ng-content>
+    </section>
+  </div>
+}

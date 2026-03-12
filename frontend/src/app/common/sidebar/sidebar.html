@@ -1,0 +1,43 @@
+<aside class="sidebar-wrap">
+  <nav class="icon-rail">
+    <div class="logo">K</div>
+
+    <div class="icon-group">
+      <app-icon-button
+        icon="dashboard"
+        [type]="'button'"
+        [active]="router.url === '/dashboard'"
+        (buttonClick)="changeTab('dashboard')"
+      />
+      <app-icon-button
+        icon="tasks"
+        [type]="'button'"
+        [active]="router.url === '/my-tasks'"
+        (buttonClick)="changeTab('my-tasks')"
+      />
+      <app-icon-button
+        icon="notifications_unread"
+        [type]="'button'"
+        [active]="router.url === '/notification'"
+        (buttonClick)="changeTab('notification')"
+      />
+      <app-icon-button
+        icon="account_circle"
+        [type]="'button'"
+        [active]="router.url === '/account'"
+        (buttonClick)="changeTab('account')"
+      />
+      <app-icon-button
+        icon="settings"
+        [type]="'button'"
+        [active]="router.url === '/settings'"
+        (buttonClick)="changeTab('settings')"
+      />
+    </div>
+
+    <div class="icon-group bottom">
+      <app-icon-button icon="help" [type]="'button'" />
+      <app-icon-button icon="light_mode" [type]="'button'" />
+    </div>
+  </nav>
+</aside>

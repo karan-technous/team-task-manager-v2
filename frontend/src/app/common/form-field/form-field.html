@@ -1,0 +1,16 @@
+<div class="field">
+  @if (label()) {
+    <label class="label">
+      {{ label() }}
+      @if (required()) {
+        <span class="required">*</span>
+      }
+    </label>
+  }
+
+  @if (type() === 'textarea') {
+    <textarea class="input" [placeholder]="placeholder()" (input)="onInput($event)"></textarea>
+  } @else {
+    <input class="input" [type]="type()" [placeholder]="placeholder()" (input)="onInput($event)" />
+  }
+</div>

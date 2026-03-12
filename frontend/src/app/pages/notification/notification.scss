@@ -1,0 +1,43 @@
+.page {
+  padding: 1.5rem;
+  color: #ebf1ff;
+}
+
+.heading p {
+  margin-top: 0.2rem;
+  color: #a6b3c8;
+}
+
+.notification-list {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.note-card {
+  background: rgba(16, 24, 38, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.85rem;
+  padding: 0.9rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+p {
+  margin: 0.28rem 0 0;
+  color: #9aa8be;
+  font-size: 0.9rem;
+}
+
+span {
+  color: #8cb7ff;
+  white-space: nowrap;
+  font-size: 0.85rem;
+}

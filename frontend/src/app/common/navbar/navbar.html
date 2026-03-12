@@ -1,0 +1,11 @@
+<header class="navbar">
+  <a class="brand" routerLink="/dashboard">TeamTask Manager</a>
+
+  <nav class="links">
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a routerLink="/my-tasks" routerLinkActive="active">My Tasks</a>
+    <a routerLink="/notification" routerLinkActive="active">Notifications</a>
+  </nav>
+
+  <button type="button" (click)="logout()">Logout</button>
+</header>

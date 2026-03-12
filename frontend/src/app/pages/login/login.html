@@ -1,0 +1,30 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <p class="eyebrow">Team Task Manager</p>
+    <h1>Welcome back</h1>
+    <p class="muted">Use any email and password to continue (dummy authentication).</p>
+
+    <form (submit)="submit(email.value, password.value); $event.preventDefault()">
+      <label>
+        Email
+        <input #email type="email" placeholder="you@company.com" />
+      </label>
+
+      <label>
+        Password
+        <input #password type="password" placeholder="Enter password" />
+      </label>
+
+      @if (error) {
+        <p class="error">{{ error }}</p>
+      }
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="switch">
+      New here?
+      <a routerLink="/register">Create account</a>
+    </p>
+  </div>
+</section>

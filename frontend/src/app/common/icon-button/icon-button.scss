@@ -1,0 +1,30 @@
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94a2bb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+}
+
+.icon-btn:active {
+  transform: translateY(0);
+}
+
+.icon-btn.active {
+  color: #eff4ff;
+  border-color: rgba(255, 255, 255, 0.023);
+  border: 1px solid rgb(159, 159, 159);
+  box-shadow: 4px 3px white;
+}

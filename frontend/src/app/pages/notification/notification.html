@@ -1,0 +1,18 @@
+<section class="page">
+  <div class="heading">
+    <h1>Notifications</h1>
+    <p>Latest workspace alerts and activity updates.</p>
+  </div>
+
+  <div class="notification-list">
+    @for (item of notifications; track item.title) {
+      <article class="note-card">
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.detail }}</p>
+        </div>
+        <span>{{ item.time }}</span>
+      </article>
+    }
+  </div>
+</section>

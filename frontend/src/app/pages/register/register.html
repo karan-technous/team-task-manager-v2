@@ -1,0 +1,35 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <p class="eyebrow">Team Task Manager</p>
+    <h1>Create your account</h1>
+    <p class="muted">Register is static and stores a dummy token in localStorage.</p>
+
+    <form (submit)="submit(name.value, email.value, password.value); $event.preventDefault()">
+      <label>
+        Full Name
+        <input #name type="text" placeholder="John Doe" />
+      </label>
+
+      <label>
+        Work Email
+        <input #email type="email" placeholder="john@company.com" />
+      </label>
+
+      <label>
+        Password
+        <input #password type="password" placeholder="Create password" />
+      </label>
+
+      @if (error) {
+        <p class="error">{{ error }}</p>
+      }
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p class="switch">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </p>
+  </div>
+</section>

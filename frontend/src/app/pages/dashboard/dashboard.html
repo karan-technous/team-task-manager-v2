@@ -1,0 +1,132 @@
+<aside class="sidebar-wrap">
+  <section class="project-panel">
+    <h2>Projects</h2>
+
+    <div class="segment">
+      <app-button [type]="'button'" [fullWidth]="true" [label]="'Team'" [variant]="'primary'" />
+      <app-button
+        [type]="'button'"
+        [label]="'Personal'"
+        [fullWidth]="true"
+        [variant]="'secondary'"
+      />
+    </div>
+
+    <app-icon-input
+      [type]="'text'"
+      [icon]="'search'"
+      [placeHolder]="'Search...'"
+      (valueChange)="searchUsers($event)"
+    />
+    <div class="scrollable">
+      <app-activity-panel
+        (emmitActiveitem)="emmitDatas($event)"
+        [panels]="[
+          {
+            project: 'Recent',
+            icon: 'history',
+            items: [
+              { title: 'Dashboard UI', count: 3 },
+              { title: 'Billing API' },
+              { title: 'User Settings' },
+            ],
+          },
+          {
+            project: 'BCA - CRM Web App',
+            items: [{ title: 'Customer List', count: 5 }, { title: 'Reports' }],
+          },
+        ]"
+      />
+      <div class="menu-block">
+        <p class="block-title">Recent</p>
+        <a class="item active-item" routerLink="/dashboard" routerLinkActive="active-item">
+          Monica - Saas Product
+          <span class="badge yellow">9</span>
+        </a>
+        <a class="item" routerLink="/my-tasks" routerLinkActive="active-item">
+          BCA - CRM Web App
+          <span class="badge orange">11</span>
+        </a>
+        <a class="item" routerLink="/notification" routerLinkActive="active-item">
+          Mandiri - Landing Page
+        </a>
+        <a class="item" routerLink="/dashboard" routerLinkActive="active-item">
+          People Hours - Company Profile
+        </a>
+        <a class="item" routerLink="/my-tasks" routerLinkActive="active-item">
+          Bandai - Social Media Plan
+          <span class="badge pink">8</span>
+        </a>
+      </div>
+
+      <div class="menu-block">
+        <p class="block-title">Categories</p>
+        <a class="item" routerLink="/dashboard">
+          Saas Product
+          <span class="badge green">2</span>
+        </a>
+        <a class="item" routerLink="/my-tasks">
+          Finance Product
+          <span class="badge red">14</span>
+        </a>
+        <a class="item" routerLink="/notification">
+          CRM Web App
+          <span class="badge purple">4</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="new-project">
+      <app-button
+        [variant]="'secondary'"
+        [type]="'button'"
+        [label]="'New Projects'"
+        [fullWidth]="true"
+        [icon]="'add'"
+        (click)="open = true"
+      />
+    </div>
+
+    <app-popup-dialoge [open]="open" (close)="open = false">
+      <h2>Add Project</h2>
+      <p>This is custom UI inside the dialog.</p>
+      <div class="add-project">
+        <app-form-field [label]="'Enter Project Name'" [type]="'text'" />
+        <app-form-field [label]="'Descriptions'" [type]="'text'" />
+      </div>
+      <br />
+      <app-button [label]="'Save'" [type]="'button'" [icon]="'save'" (buttonClick)="saveProject()"/>
+    </app-popup-dialoge>
+  </section>
+
+  <section class="page">
+    <div class="heading">
+      <h1>Dashboard</h1>
+      <p>Track team workload, sprint health, and upcoming priorities.</p>
+    </div>
+
+    <div class="metric-grid">
+      @for (item of metrics; track item.label) {
+        <article class="card metric-card">
+          <p>{{ item.label }}</p>
+          <h2>{{ item.value }}</h2>
+        </article>
+      }
+    </div>
+
+    <article class="card">
+      <h3>Upcoming Team Actions</h3>
+      <div class="list">
+        @for (row of upcoming; track row.task) {
+          <div class="row">
+            <div>
+              <p class="task">{{ row.task }}</p>
+              <p class="owner">Owner: {{ row.owner }}</p>
+            </div>
+            <span>{{ row.due }}</span>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+</aside>

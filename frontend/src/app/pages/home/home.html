@@ -1,0 +1,18 @@
+<section class="home-page">
+  <div class="hero">
+    <p class="eyebrow">Team Task Manager</p>
+    <h1>Plan work, assign tasks, and track team progress</h1>
+    <p class="muted">
+      Static demo application with dark UI, protected routes, and dummy local token authentication.
+    </p>
+
+    <div class="actions">
+      @if (isAuthenticated()) {
+        <app-button label="Go to Dashboard" (click)="goTo('/dashboard')" />
+      } @else {
+        <app-button label="Login" (click)="goTo('/login')" />
+        <app-button label="Register" variant="secondary" (click)="goTo('/register')" />
+      }
+    </div>
+  </div>
+</section>

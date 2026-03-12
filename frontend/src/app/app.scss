@@ -1,0 +1,18 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  color: #e8edf6;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1d2535 0%, #0f1420 55%, #0b1019 100%);
+  display: flex;
+}
+
+.app-main {
+  height: calc(100vh - 0px);
+  flex: 1;
+  min-width: 0;
+  overflow-y: scroll;
+}

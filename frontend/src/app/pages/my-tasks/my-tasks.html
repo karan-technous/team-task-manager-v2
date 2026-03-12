@@ -1,0 +1,18 @@
+<section class="page">
+  <div class="heading">
+    <h1>My Tasks</h1>
+    <p>Personal task queue for the current sprint.</p>
+  </div>
+
+  <div class="task-list">
+    @for (item of tasks; track item.title) {
+      <article class="task-card">
+        <div>
+          <h3>{{ item.title }}</h3>
+          <p>Priority: {{ item.priority }}</p>
+        </div>
+        <span>{{ item.status }}</span>
+      </article>
+    }
+  </div>
+</section>

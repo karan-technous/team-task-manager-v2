@@ -1,0 +1,8 @@
+<button [attr.type]="type()" [class.active]="active()" class="icon-btn" (click)="onClick()">
+  <mat-icon>
+    {{ icon() }}
+  </mat-icon>
+  @if (text()) {
+    <span>{{ text() }}</span>
+  }
+</button>

@@ -1,0 +1,33 @@
+button {
+  border: 0;
+  border-radius: 0.65rem;
+  background: linear-gradient(100deg, #4f88ff, #3b62d0);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.68rem 1rem;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button.secondary {
+  background: #20324f;
+  border: 1px solid #3b5174;
+}
+
+button.full-width {
+  width: 100%;
+}

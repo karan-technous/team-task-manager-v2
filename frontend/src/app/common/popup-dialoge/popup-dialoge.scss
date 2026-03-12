@@ -1,0 +1,78 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  animation: overlayFadeIn 220ms ease forwards;
+}
+
+.overlay.closing {
+  animation: overlayFadeOut 200ms ease forwards;
+}
+
+.dialog .close-dialog {
+  position: absolute;
+  right: 0px;
+  top: -7px;
+  z-index: 10;
+}
+
+.dialog {
+  position: relative;
+  background: rgba(17, 20, 34, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 1rem;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  min-width: 340px;
+  max-width: 520px;
+  width: min(520px, 90vw);
+  animation: dialogPopIn 240ms ease forwards;
+}
+
+.dialog.closing {
+  animation: dialogPopOut 220ms ease forwards;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlayFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialogPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dialogPopOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(16px) scale(0.95);
+  }
+}

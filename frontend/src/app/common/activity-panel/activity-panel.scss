@@ -1,0 +1,87 @@
+.panel .accordion .header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: space-between;
+}
+
+.accordion {
+  padding: 4px 2px;
+}
+
+.panel .accordion .header .left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.list-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  margin-top: 5px;
+  padding: 0px 4px;
+  transition: max-height 0.3s ease;
+}
+
+.list-wrapper.open {
+  max-height: 300px;
+}
+
+.arrow {
+  transition: transform 0.25s ease;
+}
+
+.arrow.rotate {
+  transform: rotate(180deg);
+}
+
+.item:hover {
+  background: #20324f;
+}
+
+.item.active {
+  background: #20324f;
+  color: white;
+  box-shadow: 4px 2px;
+}
+
+.list {
+  position: relative;
+  margin-left: 22px;
+  padding-left: 10px;
+}
+
+/* vertical line */
+.list::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 1px;
+  background: #3a3a3a;
+}
+
+/* horizontal connector */
+.item {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 6px;
+  transition: all 0.2s;
+}
+
+/* small branch line */
+.item::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: #3a3a3a;
+}

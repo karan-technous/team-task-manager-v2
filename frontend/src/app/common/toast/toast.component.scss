@@ -1,0 +1,99 @@
+.toast {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+  color: white;
+  --toast-y: 0px;
+  --toast-scale: 1;
+  --toast-exit-y: 0px;
+  --toast-exit-scale: 1;
+  --toast-enter-y: -40px;
+  opacity: 1;
+  transform: translateY(calc(var(--toast-y) + var(--toast-exit-y)))
+    scale(calc(var(--toast-scale) * var(--toast-exit-scale)));
+  transform-origin: top right;
+  animation: toast-in 0.35s cubic-bezier(0.21, 1.02, 0.73, 1);
+  transition:
+    transform 0.35s cubic-bezier(0.21, 1.02, 0.73, 1),
+    opacity 0.2s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+  margin-left: -36px;
+}
+/* enter */
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--toast-y) + var(--toast-enter-y)))
+      scale(calc(var(--toast-scale) * var(--toast-exit-scale)));
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* exit */
+
+.toast.removing {
+  --toast-exit-y: -40px;
+  --toast-exit-scale: 0.95;
+  opacity: 0;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.desc {
+  font-size: 12px;
+
+  opacity: 0.7;
+}
+
+.action {
+  border: none;
+
+  padding: 6px 10px;
+
+  border-radius: 6px;
+
+  background: #2d2d2d;
+
+  color: white;
+
+  cursor: pointer;
+}
+.icon {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-size: 20px;
+  line-height: 1;
+  flex: 0 0 auto;
+  color: #9fd29f;
+}
+
+.toast.success .icon {
+  color: white;
+}
+
+.toast.error .icon {
+  color: #ff8a8a;
+}
+
+.toast.warning .icon {
+  color: #ffd07a;
+}
+
+.toast.pending .icon {
+  color: #7fc7ff;
+}

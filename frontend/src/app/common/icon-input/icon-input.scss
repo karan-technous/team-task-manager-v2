@@ -1,0 +1,30 @@
+
+.search-box {
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0f141d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0 0.45rem;
+}
+
+.search-box span {
+  color: #7f8da4;
+  font-size: 1rem;
+}
+
+.search-box input {
+  border: 0;
+  background: transparent;
+  color: #d9e2f1;
+  outline: none;
+  font-size: 1rem;
+}
+
+.search-box small {
+  color: #8d9cb2;
+  font-size: 1rem;
+}

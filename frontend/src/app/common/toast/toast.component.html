@@ -1,0 +1,32 @@
+<div
+  class="toast"
+  [class.removing]="toast().removing"
+  [class.success]="typeClass() === 'success'"
+  [class.error]="typeClass() === 'error'"
+  [class.warning]="typeClass() === 'warning'"
+  [class.pending]="typeClass() === 'pending'"
+  [style.--toast-y.px]="offset()"
+  [style.--toast-scale]="scale()"
+  [style.zIndex]="zIndex()"
+>
+  <span class="icon material-symbols-outlined" aria-hidden="true"
+    ><mat-icon>{{ icon() }}</mat-icon></span
+  >
+  <div class="content">
+    <div class="title">
+      {{ toast().title }}
+    </div>
+
+    @if (toast().description) {
+      <div class="desc">
+        {{ toast().description }}
+      </div>
+    }
+  </div>
+
+  @if (toast().action) {
+    <button class="action" (click)="toast().action!.handler()">
+      {{ toast().action!.label }}
+    </button>
+  }
+</div>

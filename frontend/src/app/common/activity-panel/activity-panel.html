@@ -1,0 +1,34 @@
+<div class="panel">
+  @for (panel of panels(); track panel.project; let i = $index) {
+    <div class="accordion">
+      <div class="header" (click)="toggle(i)">
+        <div class="left">
+          <mat-icon>{{ panel?.icon || icon() }}</mat-icon>
+          <span class="project">
+            {{ panel.project }}
+          </span>
+        </div>
+
+        <mat-icon class="arrow" [class.rotate]="openIndexes().has(i)"> expand_more </mat-icon>
+      </div>
+
+      <div class="list-wrapper" [class.open]="openIndexes().has(i)">
+        <div class="list">
+          @for (item of panel.items; track item.title) {
+            <div
+              class="item"
+              (click)="selectItem(item.title, panel.project)"
+              [class.active]="activeItem() === item.title"
+            >
+              <span># {{ item.title }}</span>
+
+              @if (item.count) {
+                <span class="badge">{{ item.count }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
