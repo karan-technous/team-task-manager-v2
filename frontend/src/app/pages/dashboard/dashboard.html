@@ -20,7 +20,7 @@
     />
     <div class="scrollable">
       <app-activity-panel
-        (emmitActiveitem)="emmitDatas($event)"
+        (emmitActiveitem)="onTaskSelected($event)"
         (projectAction)="onProjectAction($event)"
         [panels]="activityPanels()"
       />
@@ -207,6 +207,57 @@
       <h1>Dashboard</h1>
       <p>Track team workload, sprint health, and upcoming priorities.</p>
     </div>
+
+    <article class="card task-details-card">
+      @if (isPanelsLoading()) {
+        <p class="empty-card">Loading tasks...</p>
+      } @else if (!projects().length) {
+        <p class="empty-card">No projects yet. Create a project to start adding tasks.</p>
+      } @else if (!tasks().length) {
+        <p class="empty-card">No tasks yet. Right-click a project to add a task.</p>
+      } @else if (selectedTask(); as task) {
+        <div class="task-details-top">
+          <div>
+            <h3 class="task-title">{{ task.summary }}</h3>
+            <p class="task-subtitle">
+              Project: <span class="pill">{{ task.projectName }}</span>
+            </p>
+          </div>
+
+          <div class="chip-row">
+            <span class="chip">{{ task.issueType }}</span>
+            <span class="chip">{{ task.priority }}</span>
+            <span class="chip chip-status">{{ task.status }}</span>
+          </div>
+        </div>
+
+        <div class="task-details-grid">
+          <div class="detail">
+            <p class="detail-label">Assignee</p>
+            <p class="detail-value">{{ task.assignee }}</p>
+          </div>
+          <div class="detail">
+            <p class="detail-label">Due date</p>
+            <p class="detail-value">{{ task.dueDate }}</p>
+          </div>
+          <div class="detail">
+            <p class="detail-label">Created</p>
+            <p class="detail-value">{{ task.createdAt }}</p>
+          </div>
+          <div class="detail">
+            <p class="detail-label">Updated</p>
+            <p class="detail-value">{{ task.updatedAt }}</p>
+          </div>
+        </div>
+
+        <div class="task-details-desc">
+          <p class="detail-label">Description</p>
+          <p class="detail-value desc">{{ task.description }}</p>
+        </div>
+      } @else {
+        <p class="empty-card">Select a task from the left panel to see details here.</p>
+      }
+    </article>
 
     <div class="metric-grid">
       @for (item of metrics; track item.label) {

@@ -10,10 +10,10 @@ import { ActivityPanel } from '../../common/activity-panel/activity-panel';
 import { FormField } from '../../common/form-field/form-field';
 import { ToastService } from '../../common/toast/toast.service';
 import { ProjectService } from '../../common/services/project.service';
-import { CreateProjectRequest } from '../../common/models/project.model';
+import { CreateProjectRequest, Project } from '../../common/models/project.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TaskService } from '../../common/services/task.service';
-import { CreateTaskRequest } from '../../common/models/task.model';
+import { CreateTaskRequest, Task } from '../../common/models/task.model';
 import { ActivityPanelPanel, DashboardService } from '../../common/services/dashboard.service';
 
 @Component({
@@ -42,6 +42,8 @@ export class Dashboard implements OnInit {
 
   readonly activityPanels = signal<ActivityPanelPanel[]>([]);
   readonly isPanelsLoading = signal(false);
+  readonly projects = signal<Project[]>([]);
+  readonly tasks = signal<Task[]>([]);
 
   readonly taskOpen = signal(false);
   readonly taskProjectName = signal('');
@@ -53,6 +55,9 @@ export class Dashboard implements OnInit {
   readonly taskAssignee = signal('');
   readonly taskDueDate = signal('');
   readonly isTaskSaving = signal(false);
+
+  readonly selectedTask = signal<Task | null>(null);
+  readonly selectedTaskId = signal<number | null>(null);
 
   readonly isProjectValid = computed(
     () => this.projectName().trim().length > 0 && this.projectDescription().trim().length > 0,
@@ -100,7 +105,18 @@ export class Dashboard implements OnInit {
       .pipe(finalize(() => this.isPanelsLoading.set(false)))
       .subscribe({
         next: (overview) => {
+          const projects = overview.projects ?? [];
+          const tasks = overview.tasks ?? [];
           this.activityPanels.set(overview.panels ?? []);
+          this.projects.set(projects);
+          this.tasks.set(tasks);
+
+          const selectedId = this.selectedTaskId();
+          if (selectedId == null) {
+            return;
+          }
+
+          this.selectedTask.set(tasks.find((t) => t.id === selectedId) ?? null);
         },
         error: (err: unknown) => {
           console.log('dashboard overview error===', err);
@@ -168,8 +184,46 @@ export class Dashboard implements OnInit {
     { task: 'Design handoff: workspace settings', owner: 'Mina', due: 'Mar 11, 3:00 PM' },
   ];
 
-  emmitDatas(data: any) {
-    console.log('called====', data);
+  onTaskSelected(event: unknown) {
+    if (!this.isTaskSelectEvent(event)) {
+      return;
+    }
+
+    const tasks = this.tasks();
+
+    let task: Task | undefined;
+    if (event.id != null) {
+      task = tasks.find((t) => t.id === event.id);
+    }
+
+    if (!task) {
+      task = tasks.find((t) => t.projectName === event.projectName && t.summary === event.title);
+    }
+
+    if (!task) {
+      this.selectedTaskId.set(null);
+      this.selectedTask.set(null);
+      this.toast.warning('Task not found');
+      return;
+    }
+
+    this.selectedTaskId.set(task.id);
+    this.selectedTask.set(task);
+  }
+
+  private isTaskSelectEvent(
+    event: unknown,
+  ): event is { id?: number; title: string; projectName: string } {
+    if (!event || typeof event !== 'object') {
+      return false;
+    }
+
+    const candidate = event as Partial<{ id: unknown; title: unknown; projectName: unknown }>;
+    if (candidate.id != null && typeof candidate.id !== 'number') {
+      return false;
+    }
+
+    return typeof candidate.title === 'string' && typeof candidate.projectName === 'string';
   }
 
   onProjectAction(event: unknown) {

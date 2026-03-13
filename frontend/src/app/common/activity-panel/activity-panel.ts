@@ -1,4 +1,4 @@
-import { Component, HostListener, input, output, signal } from '@angular/core';
+import { Component, computed, HostListener, input, output, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ListItem } from '../list-item/list-item';
 
@@ -6,12 +6,14 @@ interface ProjectPanel {
   project: string;
   icon?: string;
   items: {
+    id?: number;
     title: string;
     count?: number;
   }[];
 }
 
 interface EmmitData {
+  id?: number;
   title: string;
   projectName: string;
 }
@@ -34,6 +36,8 @@ export class ActivityPanel {
   emmitActiveitem = output<EmmitData>();
   projectAction = output<ProjectActionEvent>();
 
+  readonly hasAnyTasks = computed(() => this.panels().some((panel) => panel.items.length > 0));
+
   openIndexes = signal<Set<number>>(new Set());
   activeItem = signal<string | null>(null);
   projectMenu = signal<{ x: number; y: number; projectName: string } | null>(null);
@@ -50,13 +54,22 @@ export class ActivityPanel {
     this.openIndexes.set(set);
   }
 
-  selectItem(title: string, projectName: string) {
-    this.activeItem.set(title);
+  selectItem(title: string, projectName: string, id?: number) {
+    this.activeItem.set(this.getItemKey(title, id));
     const emmitData = {
+      id,
       title,
       projectName,
     };
     this.emmitActiveitem.emit(emmitData);
+  }
+
+  isActive(title: string, id?: number) {
+    return this.activeItem() === this.getItemKey(title, id);
+  }
+
+  private getItemKey(title: string, id?: number) {
+    return id != null ? `id:${id}` : title;
   }
 
   openProjectMenu(event: MouseEvent, projectName: string) {

@@ -7,6 +7,7 @@ import { Project } from '../models/project.model';
 import { Task } from '../models/task.model';
 
 export type ActivityPanelItem = {
+  id?: number;
   title: string;
   count?: number;
 };
@@ -47,4 +48,3 @@ export class DashboardService {
       );
   }
 }
-

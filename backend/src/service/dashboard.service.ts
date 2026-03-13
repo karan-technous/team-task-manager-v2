@@ -4,6 +4,7 @@ import { getProject } from "./project.service";
 import { getTasks } from "./task.service";
 
 type PanelItem = {
+  id?: number;
   title: string;
   count?: number;
 };
@@ -35,7 +36,7 @@ export const getDashboardOverview = async (): Promise<DashboardOverview> => {
     const list = tasksByProject.get(project.projectName) ?? [];
     return {
       project: project.projectName,
-      items: list.map((t) => ({ title: t.summary })),
+      items: list.map((t) => ({ id: t.id, title: t.summary })),
     };
   });
 
@@ -45,10 +46,9 @@ export const getDashboardOverview = async (): Promise<DashboardOverview> => {
 
     panels.push({
       project: projectName,
-      items: list.map((t) => ({ title: t.summary })),
+      items: list.map((t) => ({ id: t.id, title: t.summary })),
     });
   }
 
   return { projects, tasks, panels };
 };
-

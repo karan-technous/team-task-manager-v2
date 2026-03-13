@@ -5,6 +5,19 @@
   justify-content: space-between;
 }
 
+.empty-state {
+  margin: 0.35rem 0 0.5rem;
+  color: #9aa8be;
+  font-size: 0.9rem;
+}
+
+.empty-items {
+  margin: 0.25rem 0 0.5rem;
+  color: #9aa8be;
+  font-size: 0.85rem;
+  padding: 4px 9px;
+}
+
 .accordion {
   padding: 4px 2px;
 }
