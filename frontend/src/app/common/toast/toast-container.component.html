@@ -1,7 +1,7 @@
 <div
   [class]="positionClass()"
-  (mouseenter)="hovered.set(true)"
-  (mouseleave)="hovered.set(false)"
+  (mouseover)="hovered.set(true)"
+  (mouseout)="onMouseOut($event)"
 >
   @for (toast of visibleToasts(); track toast.id; let i = $index) {
     <app-toast

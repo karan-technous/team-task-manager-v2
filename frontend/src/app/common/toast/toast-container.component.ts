@@ -21,6 +21,8 @@ export class ToastContainerComponent {
 
   totalCount = computed(() => this.toastService.toasts().length);
 
+  hasToasts = computed(() => this.totalCount() > 0);
+
   layout = computed<'stacked' | 'vertical'>(() => {
     const count = this.totalCount();
     if (this.hovered()) return 'vertical';
@@ -28,5 +30,17 @@ export class ToastContainerComponent {
     return 'vertical';
   });
 
-  positionClass = computed(() => `toast-container ${this.position()}`);
+  positionClass = computed(() => {
+    const active = this.hasToasts() ? ' active' : '';
+    return `toast-container ${this.position()}${active}`;
+  });
+
+  onMouseOut(event: MouseEvent) {
+    const current = event.currentTarget as HTMLElement | null;
+    const related = event.relatedTarget as Node | null;
+
+    if (!current || !related || !current.contains(related)) {
+      this.hovered.set(false);
+    }
+  }
 }
