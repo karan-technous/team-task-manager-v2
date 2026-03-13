@@ -34,9 +34,21 @@ export class Dashboard {
   readonly projectDescription = signal('');
   readonly isSaving = signal(false);
 
+  readonly taskOpen = signal(false);
+  readonly taskProjectName = signal('');
+  readonly taskSummary = signal('');
+  readonly taskDescription = signal('');
+  readonly taskType = signal<'Task' | 'Bug' | 'Story'>('Task');
+  readonly taskPriority = signal<'Highest' | 'High' | 'Medium' | 'Low' | 'Lowest'>('Medium');
+  readonly taskStatus = signal<'To Do' | 'In Progress' | 'In Review' | 'Done'>('To Do');
+  readonly taskAssignee = signal('');
+  readonly taskDueDate = signal('');
+
   readonly isProjectValid = computed(
     () => this.projectName().trim().length > 0 && this.projectDescription().trim().length > 0,
   );
+
+  readonly isTaskValid = computed(() => this.taskSummary().trim().length > 0);
 
   readonly metrics = [
     { label: 'Active Projects', value: '4' },
@@ -106,14 +118,61 @@ export class Dashboard {
     console.log('called====', data);
   }
 
-  onProjectAction(event: { action: 'addTask' | 'deleteProject'; projectName: string }) {
+  onProjectAction(event: unknown) {
     console.log('project action====', event);
 
+    if (!this.isProjectActionEvent(event)) {
+      return;
+    }
+
     if (event.action === 'addTask') {
-      this.toast.pending('Add task', `Project: ${event.projectName}`);
+      this.openAddTaskDialog(event.projectName);
       return;
     }
 
     this.toast.warning('Delete project', `Project: ${event.projectName}`);
+  }
+
+  private isProjectActionEvent(
+    event: unknown,
+  ): event is { action: 'addTask' | 'deleteProject'; projectName: string } {
+    if (!event || typeof event !== 'object') {
+      return false;
+    }
+
+    const candidate = event as Partial<{ action: unknown; projectName: unknown }>;
+    if (candidate.action !== 'addTask' && candidate.action !== 'deleteProject') {
+      return false;
+    }
+
+    return typeof candidate.projectName === 'string';
+  }
+
+  openAddTaskDialog(projectName: string) {
+    this.taskProjectName.set(projectName);
+    this.taskSummary.set('');
+    this.taskDescription.set('');
+    this.taskType.set('Task');
+    this.taskPriority.set('Medium');
+    this.taskStatus.set('To Do');
+    this.taskAssignee.set('');
+    this.taskDueDate.set('');
+    this.taskOpen.set(true);
+  }
+
+  closeTaskDialog() {
+    this.taskOpen.set(false);
+  }
+
+  saveTask() {
+    if (!this.isTaskValid()) {
+      this.toast.warning('Please enter a task summary');
+      return;
+    }
+
+    const summary = this.taskSummary().trim();
+    const projectName = this.taskProjectName();
+    this.toast.success('Task created', `${summary} - ${projectName}`);
+    this.closeTaskDialog();
   }
 }

@@ -116,6 +116,100 @@
         (buttonClick)="saveProject()"
       />
     </app-popup-dialoge>
+
+    <app-popup-dialoge [open]="taskOpen()" (close)="closeTaskDialog()">
+      <h2>Add Task</h2>
+      <p class="dialog-subtitle">Project: <span class="pill">{{ taskProjectName() }}</span></p>
+
+      <div class="task-form">
+        <app-form-field
+          [label]="'Summary'"
+          [type]="'text'"
+          [placeholder]="'e.g. Implement auth guard'"
+          [value]="taskSummary()"
+          (valueChange)="taskSummary.set($event)"
+        />
+
+        <app-form-field
+          [label]="'Description'"
+          [type]="'textarea'"
+          [placeholder]="'Add details, acceptance criteria, links...'"
+          [value]="taskDescription()"
+          (valueChange)="taskDescription.set($event)"
+        />
+
+        <div class="task-meta">
+          <div class="select-field">
+            <label class="select-label">Issue type</label>
+            <select
+              class="select-input"
+              [value]="taskType()"
+              (change)="taskType.set($any($event.target).value)"
+            >
+              <option value="Task">Task</option>
+              <option value="Bug">Bug</option>
+              <option value="Story">Story</option>
+            </select>
+          </div>
+
+          <div class="select-field">
+            <label class="select-label">Priority</label>
+            <select
+              class="select-input"
+              [value]="taskPriority()"
+              (change)="taskPriority.set($any($event.target).value)"
+            >
+              <option value="Highest">Highest</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+              <option value="Lowest">Lowest</option>
+            </select>
+          </div>
+
+          <div class="select-field">
+            <label class="select-label">Status</label>
+            <select
+              class="select-input"
+              [value]="taskStatus()"
+              (change)="taskStatus.set($any($event.target).value)"
+            >
+              <option value="To Do">To Do</option>
+              <option value="In Progress">In Progress</option>
+              <option value="In Review">In Review</option>
+              <option value="Done">Done</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="task-meta two-col">
+          <app-form-field
+            [label]="'Assignee'"
+            [type]="'text'"
+            [placeholder]="'e.g. Aisha'"
+            [value]="taskAssignee()"
+            (valueChange)="taskAssignee.set($event)"
+          />
+
+          <app-form-field
+            [label]="'Due date'"
+            [type]="'date'"
+            [placeholder]="''"
+            [value]="taskDueDate()"
+            (valueChange)="taskDueDate.set($event)"
+          />
+        </div>
+      </div>
+
+      <br />
+      <app-button
+        [label]="'Create task'"
+        [type]="'button'"
+        [icon]="'add'"
+        [disabled]="!isTaskValid()"
+        (buttonClick)="saveTask()"
+      />
+    </app-popup-dialoge>
   </section>
 
   <section class="page">
