@@ -28,5 +28,17 @@ export class TaskService {
         }),
       );
   }
-}
 
+  deleteTask(id: number): Observable<Task> {
+    return this.http
+      .delete<ApiResponse<Task>>(`${this.baseUrl}/api/v1/task/${id}`)
+      .pipe(
+        map((response) => {
+          if (!response?.success) {
+            throw new Error(response?.message || 'Failed to delete task.');
+          }
+          return response.data;
+        }),
+      );
+  }
+}

@@ -23,6 +23,13 @@ interface ProjectActionEvent {
   projectName: string;
 }
 
+interface TaskActionEvent {
+  action: 'deleteTask';
+  taskId?: number;
+  title: string;
+  projectName: string;
+}
+
 @Component({
   selector: 'app-activity-panel',
   standalone: true,
@@ -35,12 +42,16 @@ export class ActivityPanel {
   panels = input<ProjectPanel[]>([]);
   emmitActiveitem = output<EmmitData>();
   projectAction = output<ProjectActionEvent>();
+  taskAction = output<TaskActionEvent>();
 
   readonly hasAnyTasks = computed(() => this.panels().some((panel) => panel.items.length > 0));
 
   openIndexes = signal<Set<number>>(new Set());
   activeItem = signal<string | null>(null);
   projectMenu = signal<{ x: number; y: number; projectName: string } | null>(null);
+  taskMenu = signal<
+    { x: number; y: number; taskId?: number; title: string; projectName: string } | null
+  >(null);
 
   toggle(i: number) {
     const set = new Set(this.openIndexes());
@@ -76,6 +87,8 @@ export class ActivityPanel {
     event.preventDefault();
     event.stopPropagation();
 
+    this.taskMenu.set(null);
+
     const menuWidth = 220;
     const menuHeight = 112;
     const offset = 8;
@@ -89,8 +102,9 @@ export class ActivityPanel {
     this.projectMenu.set({ x, y, projectName });
   }
 
-  closeProjectMenu() {
+  closeContextMenu() {
     this.projectMenu.set(null);
+    this.taskMenu.set(null);
   }
 
   triggerProjectAction(action: ProjectActionEvent['action']) {
@@ -100,7 +114,41 @@ export class ActivityPanel {
     }
 
     this.projectAction.emit({ action, projectName: menu.projectName });
-    this.closeProjectMenu();
+    this.closeContextMenu();
+  }
+
+  openTaskMenu(event: MouseEvent, item: { id?: number; title: string }, projectName: string) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.projectMenu.set(null);
+
+    const menuWidth = 220;
+    const menuHeight = 64;
+    const offset = 8;
+
+    const maxX = Math.max(offset, window.innerWidth - menuWidth - offset);
+    const maxY = Math.max(offset, window.innerHeight - menuHeight - offset);
+
+    const x = Math.min(Math.max(event.clientX, offset), maxX);
+    const y = Math.min(Math.max(event.clientY, offset), maxY);
+
+    this.taskMenu.set({ x, y, taskId: item.id, title: item.title, projectName });
+  }
+
+  triggerTaskAction(action: TaskActionEvent['action']) {
+    const menu = this.taskMenu();
+    if (!menu) {
+      return;
+    }
+
+    this.taskAction.emit({
+      action,
+      taskId: menu.taskId,
+      title: menu.title,
+      projectName: menu.projectName,
+    });
+    this.closeContextMenu();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -109,6 +157,6 @@ export class ActivityPanel {
       return;
     }
 
-    this.closeProjectMenu();
+    this.closeContextMenu();
   }
 }

@@ -10,3 +10,18 @@ export const getTasks = async () => {
 export const storeTask = async (data: Task) => {
   return await taskRepo.save(data);
 };
+
+export const deleteTaskById = async (id: number) => {
+  const task = await taskRepo.findOneBy({ id });
+  if (!task) {
+    return null;
+  }
+
+  await taskRepo.remove(task);
+  return task;
+};
+
+export const deleteTasksByProjectName = async (projectName: string) => {
+  const result = await taskRepo.delete({ projectName });
+  return result.affected ?? 0;
+};

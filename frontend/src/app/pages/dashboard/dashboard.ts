@@ -39,6 +39,7 @@ export class Dashboard implements OnInit {
   readonly projectName = signal('');
   readonly projectDescription = signal('');
   readonly isSaving = signal(false);
+  readonly isProjectDeleting = signal(false);
 
   readonly activityPanels = signal<ActivityPanelPanel[]>([]);
   readonly isPanelsLoading = signal(false);
@@ -55,6 +56,7 @@ export class Dashboard implements OnInit {
   readonly taskAssignee = signal('');
   readonly taskDueDate = signal('');
   readonly isTaskSaving = signal(false);
+  readonly isTaskDeleting = signal(false);
 
   readonly selectedTask = signal<Task | null>(null);
   readonly selectedTaskId = signal<number | null>(null);
@@ -116,7 +118,11 @@ export class Dashboard implements OnInit {
             return;
           }
 
-          this.selectedTask.set(tasks.find((t) => t.id === selectedId) ?? null);
+          const selected = tasks.find((t) => t.id === selectedId) ?? null;
+          this.selectedTask.set(selected);
+          if (!selected) {
+            this.selectedTaskId.set(null);
+          }
         },
         error: (err: unknown) => {
           console.log('dashboard overview error===', err);
@@ -238,7 +244,17 @@ export class Dashboard implements OnInit {
       return;
     }
 
-    this.toast.warning('Delete project', `Project: ${event.projectName}`);
+    this.deleteProject(event.projectName);
+  }
+
+  onTaskAction(event: unknown) {
+    if (!this.isTaskActionEvent(event)) {
+      return;
+    }
+
+    if (event.action === 'deleteTask') {
+      this.deleteTask(event.taskId, event.title);
+    }
   }
 
   private isProjectActionEvent(
@@ -254,6 +270,117 @@ export class Dashboard implements OnInit {
     }
 
     return typeof candidate.projectName === 'string';
+  }
+
+  private isTaskActionEvent(
+    event: unknown,
+  ): event is { action: 'deleteTask'; taskId?: number; title: string; projectName: string } {
+    if (!event || typeof event !== 'object') {
+      return false;
+    }
+
+    const candidate = event as Partial<{
+      action: unknown;
+      taskId: unknown;
+      title: unknown;
+      projectName: unknown;
+    }>;
+
+    if (candidate.action !== 'deleteTask') {
+      return false;
+    }
+
+    if (candidate.taskId != null && typeof candidate.taskId !== 'number') {
+      return false;
+    }
+
+    return typeof candidate.title === 'string' && typeof candidate.projectName === 'string';
+  }
+
+  private deleteProject(projectName: string) {
+    if (this.isProjectDeleting()) {
+      return;
+    }
+
+    const project = this.projects().find((p) => p.projectName === projectName);
+    if (!project) {
+      this.toast.error('Delete failed', 'Project not found');
+      return;
+    }
+
+    const ok = confirm(
+      `Delete project "${projectName}"?\n\nThis will also delete all tasks in this project.`,
+    );
+    if (!ok) {
+      return;
+    }
+
+    this.isProjectDeleting.set(true);
+    this.projectService
+      .deleteProject(project.id)
+      .pipe(finalize(() => this.isProjectDeleting.set(false)))
+      .subscribe({
+        next: (result) => {
+          const count = result.deletedTasksCount ?? 0;
+          const suffix = count ? ` (removed ${count} tasks)` : '';
+          this.toast.success('Project deleted', `${result.project.projectName}${suffix}`);
+
+          this.selectedTaskId.set(null);
+          this.selectedTask.set(null);
+          this.loadPanels();
+        },
+        error: (err: unknown) => {
+          console.log('project delete error===', err);
+          let message = 'Unable to delete the project right now.';
+          if (err instanceof HttpErrorResponse) {
+            message = err.error?.message || err.message || message;
+          } else if (err instanceof Error) {
+            message = err.message;
+          }
+          this.toast.error('Delete failed', message);
+        },
+      });
+  }
+
+  private deleteTask(taskId: number | undefined, title: string) {
+    if (this.isTaskDeleting()) {
+      return;
+    }
+
+    if (taskId == null) {
+      this.toast.error('Delete failed', 'Task id missing');
+      return;
+    }
+
+    const ok = confirm(`Delete task "${title}"?`);
+    if (!ok) {
+      return;
+    }
+
+    this.isTaskDeleting.set(true);
+    this.taskService
+      .deleteTask(taskId)
+      .pipe(finalize(() => this.isTaskDeleting.set(false)))
+      .subscribe({
+        next: (task) => {
+          this.toast.success('Task deleted', `${task.summary} - ${task.projectName}`);
+          if (this.selectedTaskId() === taskId) {
+            this.selectedTaskId.set(null);
+            this.selectedTask.set(null);
+          }
+          this.loadPanels();
+        },
+        error: (err: unknown) => {
+          console.log('task delete error===', err);
+          let message = 'Unable to delete the task right now.';
+          if (err instanceof HttpErrorResponse) {
+            message = err.error?.message || err.message || message;
+          } else if (err instanceof Error) {
+            message = err.message;
+          }
+          this.toast.error('Delete failed', message);
+        },
+      });
   }
 
   openAddTaskDialog(projectName: string) {

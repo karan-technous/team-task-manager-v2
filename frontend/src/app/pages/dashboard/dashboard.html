@@ -22,6 +22,7 @@
       <app-activity-panel
         (emmitActiveitem)="onTaskSelected($event)"
         (projectAction)="onProjectAction($event)"
+        (taskAction)="onTaskAction($event)"
         [panels]="activityPanels()"
       />
       <div class="menu-block">

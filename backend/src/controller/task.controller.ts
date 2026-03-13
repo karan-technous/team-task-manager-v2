@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { storeTask } from "../service/task.service";
+import { deleteTaskById, storeTask } from "../service/task.service";
 import { sendError, sendSuccess } from "../utils/response";
 import { Task } from "../entities/Task";
 
@@ -44,5 +44,23 @@ export const storeTaskIntoDb = async (req: Request, res: Response) => {
     sendSuccess(res, savedTask, "task created", 201);
   } catch (err) {
     sendError(res, "error to creating task", 500, err);
+  }
+};
+
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) {
+      return sendError(res, "Invalid task id", 400);
+    }
+
+    const deleted = await deleteTaskById(id);
+    if (!deleted) {
+      return sendError(res, "Task not found", 404);
+    }
+
+    sendSuccess(res, deleted, "task deleted successfully");
+  } catch (err) {
+    sendError(res, "error to deleting task", 500, err);
   }
 };

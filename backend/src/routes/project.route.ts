@@ -1,9 +1,14 @@
 import { Router } from "express";
-import { getAllProject, storeIntoDb } from "../controller/project.controller";
+import {
+  deleteProject,
+  getAllProject,
+  storeIntoDb,
+} from "../controller/project.controller";
 
 const projectRoute = Router();
 
 projectRoute.get("/", getAllProject);
 projectRoute.post("/store", storeIntoDb);
+projectRoute.delete("/:id", deleteProject);
 
 export default projectRoute;

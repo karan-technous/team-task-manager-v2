@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { getProject, storeProject } from "../service/project.service";
+import {
+  deleteProjectById,
+  getProject,
+  storeProject,
+} from "../service/project.service";
 import { sendError, sendSuccess } from "../utils/response";
 
 export const getAllProject = async (req: Request, res: Response) => {
@@ -18,5 +22,23 @@ export const storeIntoDb = async (req: Request, res: Response) => {
     sendSuccess(res, savedProject, "project saved successfully");
   } catch (err) {
     sendError(res, "error to saving project", 500, err);
+  }
+};
+
+export const deleteProject = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isFinite(id)) {
+      return sendError(res, "Invalid project id", 400);
+    }
+
+    const deleted = await deleteProjectById(id);
+    if (!deleted) {
+      return sendError(res, "Project not found", 404);
+    }
+
+    sendSuccess(res, deleted, "project deleted successfully");
+  } catch (err) {
+    sendError(res, "error to deleting project", 500, err);
   }
 };

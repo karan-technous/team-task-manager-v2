@@ -5,6 +5,11 @@ import { API_BASE_URL } from '../tokens/api-base-url.token';
 import { ApiResponse } from '../models/api-response.model';
 import { CreateProjectRequest, Project } from '../models/project.model';
 
+export type DeleteProjectResult = {
+  project: Project;
+  deletedTasksCount: number;
+};
+
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
   private readonly baseUrl: string;
@@ -23,6 +28,19 @@ export class ProjectService {
         map((response) => {
           if (!response?.success) {
             throw new Error(response?.message || 'Failed to save project.');
+          }
+          return response.data;
+        }),
+      );
+  }
+
+  deleteProject(id: number): Observable<DeleteProjectResult> {
+    return this.http
+      .delete<ApiResponse<DeleteProjectResult>>(`${this.baseUrl}/api/v1/project/${id}`)
+      .pipe(
+        map((response) => {
+          if (!response?.success) {
+            throw new Error(response?.message || 'Failed to delete project.');
           }
           return response.data;
         }),
