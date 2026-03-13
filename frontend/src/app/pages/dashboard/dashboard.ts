@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, computed, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { finalize } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,7 +32,7 @@ import { ActivityPanelPanel, DashboardService } from '../../common/services/dash
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
-export class Dashboard implements OnInit {
+export class Dashboard {
   private readonly platformId = inject(PLATFORM_ID);
 
   readonly open = signal(false);
@@ -90,14 +90,14 @@ export class Dashboard implements OnInit {
     private projectService: ProjectService,
     private taskService: TaskService,
     private dashboardService: DashboardService,
-  ) {}
-
-  ngOnInit() {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    this.loadPanels();
+  ) {
+    effect(() => {
+      if (!isPlatformBrowser(this.platformId)) {
+        return;
+      }
+      console.log('dashboard loadeed');
+      this.loadPanels();
+    });
   }
 
   loadPanels() {
@@ -135,9 +135,6 @@ export class Dashboard implements OnInit {
           this.toast.error('Load failed', message);
         },
       });
-  }
-  buttonClick() {
-    console.log('button');
   }
 
   saveProject() {
