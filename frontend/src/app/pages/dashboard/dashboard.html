@@ -22,21 +22,7 @@
       <app-activity-panel
         (emmitActiveitem)="emmitDatas($event)"
         (projectAction)="onProjectAction($event)"
-        [panels]="[
-          {
-            project: 'Recent',
-            icon: 'history',
-            items: [
-              { title: 'Dashboard UI', count: 3 },
-              { title: 'Billing API' },
-              { title: 'User Settings' },
-            ],
-          },
-          {
-            project: 'BCA - CRM Web App',
-            items: [{ title: 'Customer List', count: 5 }, { title: 'Reports' }],
-          },
-        ]"
+        [panels]="activityPanels()"
       />
       <div class="menu-block">
         <p class="block-title">Recent</p>

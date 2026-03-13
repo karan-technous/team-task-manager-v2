@@ -1,4 +1,5 @@
-import { Component, computed, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, computed, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { finalize } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,6 +14,7 @@ import { CreateProjectRequest } from '../../common/models/project.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TaskService } from '../../common/services/task.service';
 import { CreateTaskRequest } from '../../common/models/task.model';
+import { ActivityPanelPanel, DashboardService } from '../../common/services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,11 +32,16 @@ import { CreateTaskRequest } from '../../common/models/task.model';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
+  private readonly platformId = inject(PLATFORM_ID);
+
   readonly open = signal(false);
   readonly projectName = signal('');
   readonly projectDescription = signal('');
   readonly isSaving = signal(false);
+
+  readonly activityPanels = signal<ActivityPanelPanel[]>([]);
+  readonly isPanelsLoading = signal(false);
 
   readonly taskOpen = signal(false);
   readonly taskProjectName = signal('');
@@ -75,7 +82,38 @@ export class Dashboard {
     private toast: ToastService,
     private projectService: ProjectService,
     private taskService: TaskService,
+    private dashboardService: DashboardService,
   ) {}
+
+  ngOnInit() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    this.loadPanels();
+  }
+
+  loadPanels() {
+    this.isPanelsLoading.set(true);
+    this.dashboardService
+      .getOverview()
+      .pipe(finalize(() => this.isPanelsLoading.set(false)))
+      .subscribe({
+        next: (overview) => {
+          this.activityPanels.set(overview.panels ?? []);
+        },
+        error: (err: unknown) => {
+          console.log('dashboard overview error===', err);
+          let message = 'Unable to load projects right now.';
+          if (err instanceof HttpErrorResponse) {
+            message = err.error?.message || err.message || message;
+          } else if (err instanceof Error) {
+            message = err.message;
+          }
+          this.toast.error('Load failed', message);
+        },
+      });
+  }
   buttonClick() {
     console.log('button');
   }
@@ -105,6 +143,7 @@ export class Dashboard {
           this.projectName.set('');
           this.projectDescription.set('');
           this.open.set(false);
+          this.loadPanels();
         },
         error: (err: unknown) => {
           console.log('err===', err);
@@ -218,6 +257,7 @@ export class Dashboard {
         next: (task) => {
           this.toast.success('Task created', `${task.summary} - ${task.projectName}`);
           this.closeTaskDialog();
+          this.loadPanels();
         },
         error: (err: unknown) => {
           console.log('task create error===', err);
