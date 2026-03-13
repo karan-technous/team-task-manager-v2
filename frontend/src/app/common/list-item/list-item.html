@@ -1,0 +1,14 @@
+<button
+  type="button"
+  class="list-item"
+  [class.danger]="variant() === 'danger'"
+  [disabled]="disabled()"
+  [attr.aria-disabled]="disabled() ? 'true' : null"
+  (click)="onClick()"
+>
+  @if (icon()) {
+    <mat-icon aria-hidden="true">{{ icon() }}</mat-icon>
+  }
+  <span class="label">{{ label() }}</span>
+</button>
+

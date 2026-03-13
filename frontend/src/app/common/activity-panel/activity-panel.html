@@ -1,7 +1,7 @@
 <div class="panel">
   @for (panel of panels(); track panel.project; let i = $index) {
     <div class="accordion">
-      <div class="header" (click)="toggle(i)">
+      <div class="header" (click)="toggle(i)" (contextmenu)="openProjectMenu($event, panel.project)">
         <div class="left">
           <mat-icon>{{ panel?.icon || icon() }}</mat-icon>
           <span class="project">
@@ -32,3 +32,26 @@
     </div>
   }
 </div>
+
+@if (projectMenu()) {
+  <div
+    class="context-backdrop"
+    (click)="closeProjectMenu()"
+    (contextmenu)="$event.preventDefault(); closeProjectMenu()"
+  >
+    <div
+      class="context-menu"
+      [style.left.px]="projectMenu()!.x"
+      [style.top.px]="projectMenu()!.y"
+      (click)="$event.stopPropagation()"
+    >
+      <app-list-item [label]="'Add task'" [icon]="'add'" (itemClick)="triggerProjectAction('addTask')" />
+      <app-list-item
+        [label]="'Delete project'"
+        [icon]="'delete'"
+        [variant]="'danger'"
+        (itemClick)="triggerProjectAction('deleteProject')"
+      />
+    </div>
+  </div>
+}

@@ -21,6 +21,7 @@
     <div class="scrollable">
       <app-activity-panel
         (emmitActiveitem)="emmitDatas($event)"
+        (projectAction)="onProjectAction($event)"
         [panels]="[
           {
             project: 'Recent',

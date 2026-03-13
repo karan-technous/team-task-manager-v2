@@ -1,0 +1,36 @@
+.list-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  text-align: left;
+}
+
+.list-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.list-item:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.list-item.danger {
+  color: #fca5a5;
+}
+
+.list-item.danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.label {
+  flex: 1;
+}
+

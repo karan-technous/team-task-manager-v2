@@ -105,4 +105,15 @@ export class Dashboard {
   emmitDatas(data: any) {
     console.log('called====', data);
   }
+
+  onProjectAction(event: { action: 'addTask' | 'deleteProject'; projectName: string }) {
+    console.log('project action====', event);
+
+    if (event.action === 'addTask') {
+      this.toast.pending('Add task', `Project: ${event.projectName}`);
+      return;
+    }
+
+    this.toast.warning('Delete project', `Project: ${event.projectName}`);
+  }
 }
