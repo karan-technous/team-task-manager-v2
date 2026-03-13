@@ -11,6 +11,8 @@ import { ToastService } from '../../common/toast/toast.service';
 import { ProjectService } from '../../common/services/project.service';
 import { CreateProjectRequest } from '../../common/models/project.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TaskService } from '../../common/services/task.service';
+import { CreateTaskRequest } from '../../common/models/task.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -43,12 +45,24 @@ export class Dashboard {
   readonly taskStatus = signal<'To Do' | 'In Progress' | 'In Review' | 'Done'>('To Do');
   readonly taskAssignee = signal('');
   readonly taskDueDate = signal('');
+  readonly isTaskSaving = signal(false);
 
   readonly isProjectValid = computed(
     () => this.projectName().trim().length > 0 && this.projectDescription().trim().length > 0,
   );
 
-  readonly isTaskValid = computed(() => this.taskSummary().trim().length > 0);
+  readonly isTaskValid = computed(() => {
+    return (
+      this.taskProjectName().trim().length > 0 &&
+      this.taskSummary().trim().length > 0 &&
+      this.taskDescription().trim().length > 0 &&
+      !!this.taskType() &&
+      !!this.taskPriority() &&
+      !!this.taskStatus() &&
+      this.taskAssignee().trim().length > 0 &&
+      this.taskDueDate().trim().length > 0
+    );
+  });
 
   readonly metrics = [
     { label: 'Active Projects', value: '4' },
@@ -60,6 +74,7 @@ export class Dashboard {
   constructor(
     private toast: ToastService,
     private projectService: ProjectService,
+    private taskService: TaskService,
   ) {}
   buttonClick() {
     console.log('button');
@@ -157,6 +172,7 @@ export class Dashboard {
     this.taskStatus.set('To Do');
     this.taskAssignee.set('');
     this.taskDueDate.set('');
+    this.isTaskSaving.set(false);
     this.taskOpen.set(true);
   }
 
@@ -165,14 +181,54 @@ export class Dashboard {
   }
 
   saveTask() {
-    if (!this.isTaskValid()) {
-      this.toast.warning('Please enter a task summary');
+    if (this.isTaskSaving()) {
       return;
     }
 
-    const summary = this.taskSummary().trim();
-    const projectName = this.taskProjectName();
-    this.toast.success('Task created', `${summary} - ${projectName}`);
-    this.closeTaskDialog();
+    const payload: CreateTaskRequest = {
+      projectName: this.taskProjectName().trim(),
+      summary: this.taskSummary().trim(),
+      description: this.taskDescription().trim(),
+      issueType: this.taskType(),
+      priority: this.taskPriority(),
+      status: this.taskStatus(),
+      assignee: this.taskAssignee().trim(),
+      dueDate: this.taskDueDate().trim(),
+    };
+
+    if (
+      !payload.projectName ||
+      !payload.summary ||
+      !payload.description ||
+      !payload.issueType ||
+      !payload.priority ||
+      !payload.status ||
+      !payload.assignee ||
+      !payload.dueDate
+    ) {
+      this.toast.warning('Please fill in all required fields');
+      return;
+    }
+
+    this.isTaskSaving.set(true);
+    this.taskService
+      .createTask(payload)
+      .pipe(finalize(() => this.isTaskSaving.set(false)))
+      .subscribe({
+        next: (task) => {
+          this.toast.success('Task created', `${task.summary} - ${task.projectName}`);
+          this.closeTaskDialog();
+        },
+        error: (err: unknown) => {
+          console.log('task create error===', err);
+          let message = 'Unable to create the task right now.';
+          if (err instanceof HttpErrorResponse) {
+            message = err.error?.message || err.message || message;
+          } else if (err instanceof Error) {
+            message = err.message;
+          }
+          this.toast.error('Task create failed', message);
+        },
+      });
   }
 }

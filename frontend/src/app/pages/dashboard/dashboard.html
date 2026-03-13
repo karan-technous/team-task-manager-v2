@@ -127,6 +127,7 @@
           [type]="'text'"
           [placeholder]="'e.g. Implement auth guard'"
           [value]="taskSummary()"
+          [required]="true"
           (valueChange)="taskSummary.set($event)"
         />
 
@@ -135,12 +136,13 @@
           [type]="'textarea'"
           [placeholder]="'Add details, acceptance criteria, links...'"
           [value]="taskDescription()"
+          [required]="true"
           (valueChange)="taskDescription.set($event)"
         />
 
         <div class="task-meta">
           <div class="select-field">
-            <label class="select-label">Issue type</label>
+            <label class="select-label">Issue type <span class="required">*</span></label>
             <select
               class="select-input"
               [value]="taskType()"
@@ -153,7 +155,7 @@
           </div>
 
           <div class="select-field">
-            <label class="select-label">Priority</label>
+            <label class="select-label">Priority <span class="required">*</span></label>
             <select
               class="select-input"
               [value]="taskPriority()"
@@ -168,7 +170,7 @@
           </div>
 
           <div class="select-field">
-            <label class="select-label">Status</label>
+            <label class="select-label">Status <span class="required">*</span></label>
             <select
               class="select-input"
               [value]="taskStatus()"
@@ -188,6 +190,7 @@
             [type]="'text'"
             [placeholder]="'e.g. Aisha'"
             [value]="taskAssignee()"
+            [required]="true"
             (valueChange)="taskAssignee.set($event)"
           />
 
@@ -196,6 +199,7 @@
             [type]="'date'"
             [placeholder]="''"
             [value]="taskDueDate()"
+            [required]="true"
             (valueChange)="taskDueDate.set($event)"
           />
         </div>
@@ -203,10 +207,10 @@
 
       <br />
       <app-button
-        [label]="'Create task'"
+        [label]="isTaskSaving() ? 'Creating...' : 'Create task'"
         [type]="'button'"
         [icon]="'add'"
-        [disabled]="!isTaskValid()"
+        [disabled]="!isTaskValid() || isTaskSaving()"
         (buttonClick)="saveTask()"
       />
     </app-popup-dialoge>
